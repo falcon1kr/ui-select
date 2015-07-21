@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.12.0 - 2015-05-28T07:44:11.360Z
+ * Version: 0.12.0 - 2015-07-21T22:15:41.720Z
  * License: MIT
  */
 
@@ -106,7 +106,8 @@ var uis = angular.module('ui.select', [])
   generateId: function() {
     return latestId++;
   },
-  appendToBody: false
+  appendToBody: false,
+  useDirectionUp: true,
 })
 
 // See Rename minErr and make it accessible from outside https://github.com/angular/angular.js/issues/6913
@@ -873,6 +874,11 @@ uis.directive('uiSelect',
           }
         });
 
+        scope.$watch('useDirectionUp', function() {
+            var useDirectionUp = scope.$eval(attrs.useDirectionUp);
+            $select.useDirectionUp = useDirectionUp !== undefined ? useDirectionUp : uiSelectConfig.useDirectionUp;
+        });
+
         //Automatically gets focus when loaded
         if (angular.isDefined(attrs.autofocus)){
           $timeout(function(){
@@ -1014,7 +1020,7 @@ uis.directive('uiSelect',
 
         // Support changing the direction of the dropdown if there isn't enough space to render it.
         scope.$watch('$select.open', function(isOpen) {
-          if (isOpen) {
+          if (isOpen && $select.useDirectionUp) {
             dropdown = angular.element(element).querySelectorAll('.ui-select-dropdown');
             if (dropdown === null) {
               return;
