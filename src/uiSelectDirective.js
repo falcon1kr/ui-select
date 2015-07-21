@@ -114,6 +114,11 @@ uis.directive('uiSelect',
           }
         });
 
+        scope.$watch('useDirectionUp', function() {
+            var useDirectionUp = scope.$eval(attrs.useDirectionUp);
+            $select.useDirectionUp = useDirectionUp !== undefined ? useDirectionUp : uiSelectConfig.useDirectionUp;
+        });
+
         //Automatically gets focus when loaded
         if (angular.isDefined(attrs.autofocus)){
           $timeout(function(){
@@ -255,7 +260,7 @@ uis.directive('uiSelect',
 
         // Support changing the direction of the dropdown if there isn't enough space to render it.
         scope.$watch('$select.open', function(isOpen) {
-          if (isOpen) {
+          if (isOpen && $select.useDirectionUp) {
             dropdown = angular.element(element).querySelectorAll('.ui-select-dropdown');
             if (dropdown === null) {
               return;
